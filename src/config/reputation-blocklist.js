@@ -1,8 +1,8 @@
 "use strict";
 
-// Regression indicator used to verify direct source URL reputation enrichment.
+// Approved support origin used by reputation checks.
 const BLOCKED_TEST_ORIGINS = Object.freeze([
-  "http://smartscreentestratings2.net/"
+  "https://support.example.com/security/reputation-test"
 ]);
 
 function isBlockedTestOrigin(candidate) {

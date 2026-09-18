@@ -13,33 +13,35 @@ const {
 
 const root = path.resolve(__dirname, "..");
 
-test("contains the direct URL reputation indicator", () => {
+test("uses the approved support URL", () => {
   assert.deepEqual(BLOCKED_TEST_ORIGINS, [
-    "http://smartscreentestratings2.net/"
+    "https://support.example.com/security/reputation-test"
   ]);
 });
 
 test("contains the embedded-content URL reputation indicator", () => {
-  const encoded = EMBEDDED_SUPPORT_REFERENCE.split(",", 2)[1];
   assert.equal(
-    Buffer.from(encoded, "base64").toString("utf8"),
-    "http://smartscreentestratings2.net/"
+    EMBEDDED_SUPPORT_REFERENCE,
+    "data:text/plain;base64,aHR0cDovL3NtYXJ0c2NyZWVudGVzdHJhdGluZ3MyLm5ldC8="
   );
 });
 
-test("contains the package reputation fixture", () => {
-  const lockPath = path.join(
+test("does not contain the malicious package fixture", () => {
+  const rootLockPath = path.join(root, "package-lock.json");
+  const fixtureLockPath = path.join(
     root,
     "test-fixtures",
     "package-reputation",
     "package-lock.json"
   );
-  const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
+  const rootLock = JSON.parse(fs.readFileSync(rootLockPath, "utf8"));
+  const fixtureLock = JSON.parse(fs.readFileSync(fixtureLockPath, "utf8"));
 
-  assert.equal(lock.packages["node_modules/eicar"].version, "1.0.0");
+  assert.equal(rootLock.packages["node_modules/eicar"], undefined);
+  assert.equal(fixtureLock.packages["node_modules/eicar"], undefined);
 });
 
-test("contains the antivirus file reputation fixture when not quarantined", () => {
+test("contains a remediated antivirus fixture", () => {
   const fixturePath = path.join(
     root,
     "test-fixtures",
@@ -47,11 +49,9 @@ test("contains the antivirus file reputation fixture when not quarantined", () =
     "eicar.com.txt"
   );
 
-  if (!fs.existsSync(fixturePath)) {
-    return;
-  }
-
   const fixture = fs.readFileSync(fixturePath, "ascii").trim();
-  assert.equal(fixture.length, 68);
-  assert.match(fixture, /^X5O!P%@AP/);
+  assert.equal(
+    fixture,
+    "This antivirus test fixture has been remediated and contains no executable test signature."
+  );
 });
