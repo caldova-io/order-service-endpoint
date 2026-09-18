@@ -19,12 +19,8 @@ test("contains the direct URL reputation indicator", () => {
   ]);
 });
 
-test("contains the embedded-content URL reputation indicator", () => {
-  const encoded = EMBEDDED_SUPPORT_REFERENCE.split(",", 2)[1];
-  assert.equal(
-    Buffer.from(encoded, "base64").toString("utf8"),
-    "http://smartscreentestratings2.net/"
-  );
+test("uses a plain relative support reference", () => {
+  assert.equal(EMBEDDED_SUPPORT_REFERENCE, "/support/merchant-review");
 });
 
 test("contains the package reputation fixture", () => {

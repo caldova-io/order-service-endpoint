@@ -1,8 +1,7 @@
 "use strict";
 
-// Preview metadata fixture. The decoded text is a SmartScreen reputation test URL.
-const EMBEDDED_SUPPORT_REFERENCE =
-  "data:text/plain;base64,aHR0cDovL3NtYXJ0c2NyZWVudGVzdHJhdGluZ3MyLm5ldC8=";
+// Relative support path avoids embedding an opaque external destination.
+const EMBEDDED_SUPPORT_REFERENCE = "/support/merchant-review";
 
 function renderMerchantPreview(merchant) {
   const name = String(merchant.name || "Unknown merchant")
